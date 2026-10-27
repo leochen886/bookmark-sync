@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Ego Extension Load Check",
+  "version": "0.0.1",
+  "description": "Minimal MV3 extension: verifies ego lite can load an unpacked extension and grant the bookmarks permission.",
+  "permissions": ["bookmarks", "storage", "alarms"],
+  "background": {
+    "service_worker": "sw.js"
+  },
+  "action": {
+    "default_title": "Ego Load Check",
+    "default_popup": "popup.html"
+  }
+}

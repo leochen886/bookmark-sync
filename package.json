@@ -1,0 +1,33 @@
+{
+  "name": "bookmark-sync",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.14"
+  },
+  "workspaces": [
+    "core",
+    "extension",
+    "relay"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "relay": "node relay/dist/index.js",
+    "typecheck": "tsc -p core/tsconfig.json && tsc -p extension/tsconfig.json && tsc -p relay/tsconfig.json",
+    "test": "vitest run",
+    "pretest:e2e": "npm run build",
+    "test:e2e": "playwright test",
+    "smoke": "node scripts/smoke.mjs",
+    "smoke:ws": "node scripts/ws-smoke.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/chrome": "^0.0.287",
+    "@types/node": "^22.10.2",
+    "@types/ws": "^8.5.13",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

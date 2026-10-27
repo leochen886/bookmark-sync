@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ego Load Check</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        min-width: 320px;
+        margin: 0;
+        padding: 16px;
+        font: 13px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      h1 { margin: 0 0 8px; font-size: 15px; }
+      table { width: 100%; border-collapse: collapse; }
+      td { padding: 4px 0; vertical-align: top; }
+      td:first-child { color: #666; width: 45%; }
+      .ok { color: #0a7d33; font-weight: 600; }
+      .bad { color: #b3261e; font-weight: 600; }
+      #error { margin-top: 8px; color: #b3261e; white-space: pre-wrap; }
+      button { margin-top: 12px; width: 100%; padding: 6px 10px; }
+    </style>
+  </head>
+  <body>
+    <h1>Ego 扩展加载检查</h1>
+    <table>
+      <tr><td>bookmarks API</td><td id="bookmarks">检查中…</td></tr>
+      <tr><td>storage API</td><td id="storage">检查中…</td></tr>
+      <tr><td>alarms API</td><td id="alarms">检查中…</td></tr>
+      <tr><td>根节点 ID</td><td id="roots">—</td></tr>
+      <tr><td>书签节点总数</td><td id="count">—</td></tr>
+      <tr><td>检查时间</td><td id="at">—</td></tr>
+    </table>
+    <div id="error"></div>
+    <button id="again">重新检查</button>
+    <script src="popup.js"></script>
+  </body>
+</html>

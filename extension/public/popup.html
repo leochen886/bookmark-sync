@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bookmark Sync</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        min-width: 340px;
+        margin: 0;
+        padding: 16px;
+        font: 13px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      h1 { margin: 0 0 12px; font-size: 15px; }
+      h2 { margin: 0 0 6px; font-size: 13px; }
+      dl { margin: 0 0 16px; }
+      dl > div { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; }
+      dt { color: #6b7280; flex: 0 0 auto; }
+      dd { margin: 0; text-align: right; word-break: break-all; }
+      #status[data-state="connected"] { color: #0a7d33; font-weight: 600; }
+      #status[data-state="connecting"] { color: #8a6d00; }
+      #status[data-state="preview"] { color: #8a6d00; font-weight: 600; }
+      #status[data-state="error"] { color: #b3261e; font-weight: 600; }
+      #status[data-state="paused"] { color: #8a6d00; }
+      #preview-section {
+        margin: 0 0 16px;
+        padding: 10px 12px;
+        border: 1px solid #d6a400;
+        border-radius: 6px;
+        background: rgba(214, 164, 0, 0.08);
+      }
+      #preview-counts, #preview-conflicts, #preview-result {
+        margin: 0 0 6px;
+        color: #6b7280;
+      }
+      #preview-result { margin: 6px 0 0; }
+      #confirm-pairing { width: 100%; padding: 6px 10px; }
+      #conflicts-section {
+        margin: 0 0 16px;
+        padding: 10px 12px;
+        border: 1px solid #b3261e;
+        border-radius: 6px;
+        background: rgba(179, 38, 30, 0.06);
+      }
+      #conflict-list { margin: 0; padding-left: 18px; }
+      #conflict-list li { margin: 0 0 4px; color: #6b7280; }
+      .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      button { flex: 1 1 auto; padding: 6px 10px; }
+    </style>
+  </head>
+  <body>
+    <h1>Bookmark Sync</h1>
+    <dl>
+      <div><dt>状态</dt><dd id="status" data-state="disconnected">未连接</dd></div>
+      <div><dt>端点</dt><dd id="endpoint">—</dd></div>
+      <div><dt>最近同步</dt><dd id="last-sync">—</dd></div>
+      <div><dt>待同步</dt><dd id="pending">0</dd></div>
+      <div><dt>冲突</dt><dd id="conflicts">0</dd></div>
+    </dl>
+
+    <section id="preview-section" hidden>
+      <h2>首次配对预览</h2>
+      <p id="preview-counts"></p>
+      <p id="preview-conflicts"></p>
+      <button id="confirm-pairing" type="button">确认合并</button>
+      <p id="preview-result"></p>
+    </section>
+
+    <section id="conflicts-section" hidden>
+      <h2>最近冲突</h2>
+      <ul id="conflict-list"></ul>
+    </section>
+
+    <div class="actions">
+      <button id="sync-now" type="button">立即同步</button>
+      <button id="toggle-pause" type="button">暂停同步</button>
+      <button id="export-bookmarks" type="button">导出书签</button>
+      <button id="open-options" type="button">设置</button>
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Bookmark Sync (Chrome ↔ ego)",
+  "version": "0.1.0",
+  "description": "Two-way bookmark sync between Chrome and ego lite through a loopback-only relay.",
+  "permissions": ["bookmarks", "storage", "alarms"],
+  "host_permissions": ["http://127.0.0.1/*"],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Bookmark Sync",
+    "default_popup": "ui/popup.html"
+  },
+  "options_page": "ui/options.html"
+}
