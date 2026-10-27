@@ -115,10 +115,11 @@ function refreshContentKeys(
   }
 }
 
-function normalizeSiblingPositions(state: CanonicalState): void {
+export function normalizeSiblingPositions(state: CanonicalState): void {
   const children = new Map<string, SyncNode[]>();
   for (const node of Object.values(state.nodes)) {
-    if (!node.parentSyncId) continue;
+    // Deleted nodes must not occupy a position or be visited as live children.
+    if (node.deleted || !node.parentSyncId) continue;
     const list = children.get(node.parentSyncId);
     if (list) list.push(node);
     else children.set(node.parentSyncId, [node]);
@@ -275,7 +276,8 @@ function collectPreviousSubtree(
 function collectCanonicalSubtree(state: CanonicalState, rootSyncId: string): SyncNode[] {
   const children = new Map<string, SyncNode[]>();
   for (const node of Object.values(state.nodes)) {
-    if (!node.parentSyncId) continue;
+    // Deleted nodes must not occupy a position or be visited as live children.
+    if (node.deleted || !node.parentSyncId) continue;
     const list = children.get(node.parentSyncId);
     if (list) list.push(node);
     else children.set(node.parentSyncId, [node]);

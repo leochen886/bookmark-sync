@@ -238,6 +238,44 @@ describe("mergePush — US3 structure", () => {
     expect(byTitle(state, "Five")?.position).toBe(1);
   });
 
+  it("does not leave position gaps when a sibling is deleted", () => {
+    const state = createInitialState();
+    const first = push(state, "chrome", [
+      makeNode({
+        localId: "10",
+        parentLocalId: "1",
+        title: "A",
+        url: "https://a.example/",
+        position: 0,
+      }),
+      makeNode({
+        localId: "11",
+        parentLocalId: "1",
+        title: "B",
+        url: "https://b.example/",
+        position: 1,
+      }),
+      makeNode({
+        localId: "12",
+        parentLocalId: "1",
+        title: "C",
+        url: "https://c.example/",
+        position: 2,
+      }),
+    ]);
+
+    push(
+      state,
+      "chrome",
+      [withSync(first.snapshot, "10"), withSync(first.snapshot, "12")],
+      first.snapshot,
+    );
+
+    expect(byTitle(state, "B")?.deleted).toBe(true);
+    expect(byTitle(state, "A")?.position).toBe(0);
+    expect(byTitle(state, "C")?.position).toBe(1);
+  });
+
   it("reports a parent change as a move in the snapshot diff", () => {
     const before = makeNode({
       localId: "10",

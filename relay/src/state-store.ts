@@ -5,6 +5,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import {
   SCHEMA_VERSION,
   createInitialState,
+  normalizeSiblingPositions,
   type CanonicalState,
 } from "@bookmark-sync/core";
 
@@ -99,6 +100,7 @@ export class StateStore {
     if (primary) {
       this.state = primary;
       this.markEndpointsOffline();
+      normalizeSiblingPositions(this.state);
       await this.writeState();
       return;
     }
@@ -118,6 +120,7 @@ export class StateStore {
       if (backup) {
         this.state = backup;
         this.markEndpointsOffline();
+        normalizeSiblingPositions(this.state);
         console.warn(`[relay] restored state from ${backupPath}`);
         await this.writeState();
         return;
