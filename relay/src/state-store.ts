@@ -19,12 +19,35 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function isSyncNodeRecord(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  return (
+    typeof value.syncId === "string" &&
+    (value.kind === "bookmark" || value.kind === "folder") &&
+    typeof value.title === "string" &&
+    (value.url === null || typeof value.url === "string") &&
+    (value.parentSyncId === null || typeof value.parentSyncId === "string") &&
+    (value.rootKey === null ||
+      value.rootKey === "bookmark_bar" ||
+      value.rootKey === "other") &&
+    typeof value.position === "number" &&
+    typeof value.createdAt === "number" &&
+    typeof value.modifiedAt === "number" &&
+    typeof value.origin === "string" &&
+    typeof value.rev === "number" &&
+    typeof value.deleted === "boolean" &&
+    (value.deletedAt === null || typeof value.deletedAt === "number") &&
+    typeof value.contentKey === "string"
+  );
+}
+
 function isCanonicalState(value: unknown): value is CanonicalState {
   if (!isRecord(value)) return false;
   return (
     value.schemaVersion === SCHEMA_VERSION &&
     typeof value.seq === "number" &&
     isRecord(value.nodes) &&
+    Object.values(value.nodes).every(isSyncNodeRecord) &&
     isRecord(value.tombstones) &&
     isRecord(value.endpoints) &&
     isRecord(value.snapshots) &&

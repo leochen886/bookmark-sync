@@ -2,7 +2,21 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const statePath = resolve(process.cwd(), "relay", "data", "state.json");
-const state = JSON.parse(await readFile(statePath, "utf8"));
+
+let state;
+try {
+  state = JSON.parse(await readFile(statePath, "utf8"));
+} catch (error) {
+  console.error(
+    `Cannot read ${statePath}: ${error instanceof Error ? error.message : String(error)}`,
+  );
+  process.exit(1);
+}
+
+if (!state || typeof state !== "object" || !state.nodes || !state.snapshots) {
+  console.error(`Invalid state file: ${statePath}`);
+  process.exit(1);
+}
 
 const active = Object.values(state.nodes).filter((node) => !node.deleted);
 const canonicalById = new Map(active.map((node) => [node.syncId, node]));
@@ -29,9 +43,7 @@ function canonicalNodePath(node) {
   if (!node.parentSyncId) return null;
   const parentPath = canonicalFolderPath(node.parentSyncId);
   if (!parentPath) return null;
-  return node.kind === "folder"
-    ? `${parentPath}/${node.title}`
-    : `${parentPath}/${node.title}`;
+  return `${parentPath}/${node.title}`;
 }
 
 const canonicalFolderPaths = new Map();
@@ -43,7 +55,6 @@ for (const node of active) {
 
 function localPathsForSnapshot(snapshot) {
   const byLocalId = new Map(snapshot.nodes.map((node) => [node.localId, node]));
-  const cache = new Map();
 
   function fullPath(node, seen = new Set()) {
     if (!node) return null;
@@ -131,15 +142,17 @@ for (const [endpointId, snapshot] of Object.entries(state.snapshots)) {
   }
 }
 
-if (endpointFolderSets.size >= 2) {
-  const entries = [...endpointFolderSets.entries()];
-  const [aId, aSet] = entries[0];
-  const [bId, bSet] = entries[1];
-  const onlyA = [...aSet].filter((path) => !bSet.has(path));
-  const onlyB = [...bSet].filter((path) => !aSet.has(path));
-  console.log(`\n[compare ${aId} vs ${bId}]`);
-  console.log(`  only in first=${onlyA.length}`);
-  onlyA.slice(0, 15).forEach((path) => console.log(`    - ${path}`));
-  console.log(`  only in second=${onlyB.length}`);
-  onlyB.slice(0, 15).forEach((path) => console.log(`    - ${path}`));
+const endpoints = [...endpointFolderSets.entries()];
+for (let left = 0; left < endpoints.length; left += 1) {
+  for (let right = left + 1; right < endpoints.length; right += 1) {
+    const [leftId, leftSet] = endpoints[left];
+    const [rightId, rightSet] = endpoints[right];
+    const onlyLeft = [...leftSet].filter((path) => !rightSet.has(path));
+    const onlyRight = [...rightSet].filter((path) => !leftSet.has(path));
+    console.log(`\n[compare ${leftId} vs ${rightId}]`);
+    console.log(`  only in first=${onlyLeft.length}`);
+    onlyLeft.slice(0, 15).forEach((path) => console.log(`    - ${path}`));
+    console.log(`  only in second=${onlyRight.length}`);
+    onlyRight.slice(0, 15).forEach((path) => console.log(`    - ${path}`));
+  }
 }

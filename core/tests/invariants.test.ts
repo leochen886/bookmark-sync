@@ -166,6 +166,7 @@ function assertStructure(state: CanonicalState): void {
   const positionsByParent = new Map<string, number[]>();
 
   for (const node of nodes) {
+    if (node.deleted) continue;
     ensure(
       node.kind !== "bookmark" || (node.url !== null && node.url.length > 0),
       `bookmark ${node.syncId} has no url`,
@@ -205,6 +206,7 @@ function assertStructure(state: CanonicalState): void {
   }
 
   for (const node of nodes) {
+    if (node.deleted) continue;
     const seen = new Set<string>();
     let current: SyncNode | undefined = node;
     while (current && current.parentSyncId) {
