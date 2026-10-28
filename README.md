@@ -67,11 +67,11 @@ npm run relay
 
 ### 在 ego lite 中安装
 
-1. 切换到准备参与同步的**那一个** Profile。
+1. 切换到准备参与同步的**那一个** Profile（本机实际使用 `Profile 4`）。
 2. 进入 `chrome://extensions`（或 ego 的扩展管理页），开启开发者模式。
 3. 加载 `extension/dist`。
-4. 设置中填写相同的中继地址与令牌；浏览器选 `ego`，Profile 名称填当前 Profile（例如 `Profile 2`）。
-5. 只在这个 Profile 里配置令牌；其他 Profile 不参与同步。
+4. 设置中填写相同的中继地址与令牌；浏览器选 `ego`，Profile 名称填一个便于识别的名字（本机当前填的是 `ego`，对应 ego 的 `Profile 4`）。
+5. 只在这个 Profile 里配置令牌；其他 Profile 不参与同步。扩展按 Profile 隔离，在别的 Profile 里看不到它属于正常现象。
 
 ### 首次配对
 
@@ -136,7 +136,7 @@ Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" 
 ## 已知限制（v1）
 
 - 仅同一台电脑；不做跨设备/云同步。
-- ego 只支持一个 Profile 参与同步。
+- ego 只支持一个 Profile 参与同步（本机固定在 `Profile 4`）。
 - 只同步“书签栏”和“其他书签”，不同步移动端专用的 `synced` 根。
 - 规模按 ≤10,000 条书签设计。
 - 插入到同级最前面时可能产生额外的 position 变更（数据正确，但有额外写入）。
@@ -149,7 +149,7 @@ Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" 
 | 弹窗显示未连接 | 中继是否启动；端口是否为 8787；令牌是否一致；`/health` 是否可达 |
 | 无法完成配对 | 设置里是否填了令牌；中继是否在线；点“重置同步状态”后重试 |
 | 删除后书签又回来 | 说明另一端在删除之后又编辑了它；双向镜像按后到者胜，会复活并记录冲突 |
-| ego 中看不到扩展 | 确认加载到了正确的 Profile，且开发者模式已开启 |
+| ego 中看不到扩展 | 先看当前是哪个 Profile：扩展只装在 `Profile 4`，切到其他 Profile 就看不到，切回即可、不需要重装；仍看不到再检查开发者模式 |
 | E2E 启动失败 | 是否已安装 Playwright Chromium；是否有桌面会话运行有头浏览器 |
 
 ## 文档

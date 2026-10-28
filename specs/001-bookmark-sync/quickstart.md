@@ -75,10 +75,10 @@ npm run relay
 
 ### 4.2 ego lite
 
-1. 切换到准备参与同步的**那一个 Profile**（本机有 Profile 1–4；v1 只同步选中的这个）。
+1. 切换到准备参与同步的**那一个 Profile**（本机有 Profile 1–4；v1 只同步选中的这个，本机实际使用 `Profile 4`）。
 2. 进入扩展管理页，开启"开发者模式"。
 3. 加载 `extension/dist`。
-4. 在选项页填入相同的中继地址与令牌，端点名称填 `ego-profile-N`（N 为实际 Profile 编号）。
+4. 在选项页填入相同的中继地址与令牌，Profile 名称填 `ego`（本机实际值）。
 5. 不要在其他 ego Profile 中安装本扩展；即使安装，也不要在其中填写令牌。
 
 > 扩展天然按 Profile 隔离：每个 Profile 的 `chrome.bookmarks` 只能看到自己的书签。
@@ -171,10 +171,10 @@ npm run relay
 
 ### V8 — 多 Profile 隔离（FR-010）
 
-1. 只在 ego 的 `Profile 2` 安装并配置扩展。
-2. 在 `Profile 2` 新增书签。
-3. 切换到 `Profile 3`，检查其书签未被读取或改动。
-4. 检查中继状态中的端点只包含 `ego:Profile 2`。
+1. 只在 ego 的 `Profile 4` 安装并配置扩展（本机实际使用的同步 Profile）。
+2. 在 `Profile 4` 新增书签。
+3. 切换到另一个 Profile（例如 `Profile 3`），检查其书签未被读取或改动。
+4. 检查中继状态中的端点只包含本机 ego 的那个端点（浏览器 `ego`）。
 
 **通过标准**: 未选中的 Profile 书签零变化。
 
